@@ -42,7 +42,7 @@ phases:
       - aws ses send-email \
         --from "soumya14041987@gmail.com" \
         --destination "ToAddresses=soumya14041987@gmail.com" \
-        --message "Subject={Data=CodeBuild Status: $CODEBUILD_BUILD_ID,Charset=utf8},Body={Text={Data=Build status: $CODEBUILD_BUILD_STATUS,Charset=utf8}}" \
+        --message "Subject={Data=Build Status,Charset=utf-8},Body={Text={Data=Build completed successfully,Charset=utf-8},Html={Data=Build completed successfully,Charset=utf-8}}" \
         --region "us-west-2"
 
 artifacts:
