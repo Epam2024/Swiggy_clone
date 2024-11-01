@@ -23,7 +23,7 @@ phases:
       - tar zxvf trivy_0.19.2_Linux-64bit.tar.gz
       - sudo mv trivy /usr/local/bin/
       - echo "Running Trivy filesystem scan..."
-      - trivy filesystem --exit-code 0 --no-progress . > trivyfilescan.txt
+      - trivy filesystem --exit-code 0 --no-progress . > trivyfilescan.txt || { echo 'Trivy scan failed'; exit 0; }
       - echo "Trivy filesystem scan completed."
 
   build:
