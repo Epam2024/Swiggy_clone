@@ -14,6 +14,7 @@ phases:
       java: corretto17
     commands:
       - echo "Install phase complete."
+      - pip install awscli  # Ensure AWS CLI is installed
 
   pre_build:
     commands:
@@ -38,13 +39,11 @@ phases:
   post_build:
     commands:
       - echo "Sending build status email..."
-      - >
-        - aws ses send-email \
+      - aws ses send-email \
         --from "soumya14041987@gmail.com" \
-        --to "soumya14041987@gmail.com" \
-        --subject "CodeBuild Status: $CODEBUILD_BUILD_ID" \
-        --text "Build status: $CODEBUILD_BUILD_STATUS" \
-        --region "us-west-2" # Update with your preferred AWS region
+        --destination "ToAddresses=soumya14041987@gmail.com" \
+        --message "Subject={Data=CodeBuild Status: $CODEBUILD_BUILD_ID,Charset=utf8},Body={Text={Data=Build status: $CODEBUILD_BUILD_STATUS,Charset=utf8}}" \
+        --region "us-west-2"
 
 artifacts:
   files:
