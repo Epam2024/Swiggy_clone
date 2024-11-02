@@ -24,6 +24,7 @@ phases:
       - echo "Performing Trivy file scan before building the image..."
       - wget https://github.com/aquasecurity/trivy/releases/download/v0.19.2/trivy_0.19.2_Linux-64bit.tar.gz
       - tar zxvf trivy_0.19.2_Linux-64bit.tar.gz
+      - sudo mv trivy /usr/local/bin/
       - export PATH=$PATH:$PWD
       - trivy filesystem --exit-code 0 --no-progress . >> trivyfilescan.txt
       - echo "Downloading and installing OWASP Dependency-Check..."
@@ -40,9 +41,6 @@ phases:
     commands:
       - echo "Running tests..."
       - echo "Building Docker image..."
-      - echo "DOCKER_REGISTRY_URL: $DOCKER_REGISTRY_URL"
-      - echo "DOCKER_REGISTRY_USERNAME: $DOCKER_REGISTRY_USERNAME"
-      - echo "Logging in to Docker registry..."
       - echo "$DOCKER_REGISTRY_PASSWORD" | docker login -u "$DOCKER_REGISTRY_USERNAME" --password-stdin "$DOCKER_REGISTRY_URL"
       - docker build -t "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/swiggy:latest" .
       - docker push "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/swiggy:latest"
@@ -57,7 +55,8 @@ phases:
       - echo "Build completed successfully!"
       - echo "Running SonarQube analysis result"
       - sonar-scanner -Dsonar.projectKey=swiggy -Dsonar.sources=. -Dsonar.host.url=http://34.212.163.213:9000/
-      - aws ses send-email --from "soumya14041987@gmail.com" --destination '{"ToAddresses":["soumya14041987@gmail.com"]}' --message '{"Subject": {"Data": "CodeBuild Status: Succeeded"}, "Body": {"Text": {"Data": "CodeBuild project has been built successfully."}}}' --region "us-west-2"
+      - echo "Sending email notification..."
+      - aws ses send-email --from "soumya14041987@gmail.com" --destination '{"ToAddresses":["soumya14041987@gmail.com"]}' --message '{"Subject": {"Data": "CodeBuild Status: Succeeded"}, "Body": {"Text": {"Data": "CodeBuild project has been built successfully."}}}' --region us-west-2
 
 artifacts:
   files:
