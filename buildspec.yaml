@@ -17,7 +17,7 @@ phases:
     - pip install awscli #Install AWS CLI
     - echo "Checking Docker version..."
     - docker --version 
-    
+
   pre_build:
     commands:
       - echo "Installing dependencies..."
@@ -40,6 +40,9 @@ phases:
     commands:
       - echo "Running tests..."
       - echo "Building Docker image..."
+      - echo "$DOCKER_REGISTRY_URL: "$DOCKER_REGISTRY_URL"
+      - echo "$DOCKER_REGISTRY_USERNAME: "$DOCKER_REGISTRY_USERNAME"
+      - echo "Attempting to login to Docker registry..."
       - echo "$DOCKER_REGISTRY_PASSWORD" | docker login -u "$DOCKER_REGISTRY_USERNAME" --password-stdin "$DOCKER_REGISTRY_URL"
       - docker build -t "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/swiggy:latest" .
       - docker push "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/swiggy:latest"
