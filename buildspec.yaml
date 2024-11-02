@@ -13,10 +13,10 @@ phases:
       python: 3.11
       java: corretto17
     commands:
-    - echo "Installing AWS CLI..."
-    - pip install awscli #Install AWS CLI
-    - echo "Checking Docker version..."
-    - docker --version 
+      - echo "Installing AWS CLI..."
+      - pip install awscli # Install AWS CLI
+      - echo "Checking Docker version..."
+      - docker --version 
 
   pre_build:
     commands:
@@ -40,8 +40,8 @@ phases:
     commands:
       - echo "Running tests..."
       - echo "Building Docker image..."
-      - echo "$DOCKER_REGISTRY_URL: "$DOCKER_REGISTRY_URL"
-      - echo "$DOCKER_REGISTRY_USERNAME: "$DOCKER_REGISTRY_USERNAME"
+      - echo "Docker Registry URL: $DOCKER_REGISTRY_URL"
+      - echo "Docker Username: $DOCKER_REGISTRY_USERNAME"
       - echo "Attempting to login to Docker registry..."
       - echo "$DOCKER_REGISTRY_PASSWORD" | docker login -u "$DOCKER_REGISTRY_USERNAME" --password-stdin "$DOCKER_REGISTRY_URL"
       - docker build -t "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/swiggy:latest" .
@@ -50,21 +50,15 @@ phases:
   post_build:
     commands:
       - echo "Performing Trivy image scan after building the image..."
-      - echo "Post-build phase started..."
-      - trivy image  "$DOCKER_REGISTRY_USERNAME/swiggy:latest" >> trivyimage.txt
+      - trivy image "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/swiggy:latest" >> trivyimage.txt
       - echo "Running OWASP Dependency-Check scan..."
       - cd dependency-check/bin
       - ./dependency-check.sh --scan . --format ALL
       - echo "Build completed successfully!"
       - echo "Running SonarQube analysis result"
-      - sonar-scanner -Dsonar.projectKey=swiggy -Dsonar.sources=. -Dsonar.host.url=http://34.212.163.213:9000/ 
+      - sonar-scanner -Dsonar.projectKey=swiggy -Dsonar.sources=. -Dsonar.host.url=http://34.212.163.213:9000/
       - echo "Sending build status email..."
-      - |
-        aws ses send-email \
-          --from "soumya14041987@gmail.com" \
-          --destination "ToAddresses=soumya14041987@gmail.com" \
-          --message "Subject={Data=Build Status,Charset=utf-8},Body={Text={Data=Build completed successfully,Charset=utf-8},Html={Data=Build completed successfully,Charset=utf-8}}" \
-          --region "us-west-2"
+      - aws ses send-email --from "soumya14041987@gmail.com" --destination "ToAddresses=soumya14041987@gmail.com" --message "Subject={Data=Build Status,Charset=utf-8},Body={Text={Data=Build completed successfully,Charset=utf-8},Html={Data=Build completed successfully,Charset=utf-8}}" --region "us-west-2"
 
 artifacts:
   files:
