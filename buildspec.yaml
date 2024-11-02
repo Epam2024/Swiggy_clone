@@ -64,9 +64,7 @@ phases:
         --message '{"Subject": {"Data": "CodeBuild Status: Succeeded"}, "Body": {"Text": {"Data": "CodeBuild project has been built successfully."}}}'
         --region us-west-2
 
-      
-
-
 artifacts:
   files:
     - appspec.yaml
+    - trivyfilescan.txt
