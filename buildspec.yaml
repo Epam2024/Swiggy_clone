@@ -12,6 +12,12 @@ phases:
     runtime-versions:
       python: 3.11
       java: corretto17
+    commands:
+    - echo "Installing AWS CLI..."
+    - pip install awscli #Install AWS CLI
+    - echo "Checking Docker version..."
+    - docker --version 
+    
   pre_build:
     commands:
       - echo "Installing dependencies..."
@@ -48,7 +54,7 @@ phases:
       - ./dependency-check.sh --scan . --format ALL
       - echo "Build completed successfully!"
       - echo "Running SonarQube analysis result"
-      - sonar-scanner -Dsonar.projectKey=swiggy -Dsonar.sources=. -Dsonar.host.url=http://34.212.163.213:9000/
+      - sonar-scanner -Dsonar.projectKey=swiggy -Dsonar.sources=. -Dsonar.host.url=http://35.89.96.213:9000/ 
       - echo "Sending build status email..."
       - aws ses send-email \
         --from "soumya14041987@gmail.com" \
