@@ -40,9 +40,6 @@ phases:
     commands:
       - echo "Running tests..."
       - echo "Building Docker image..."
-      - echo "Docker Registry URL: $DOCKER_REGISTRY_URL"
-      - echo "Docker Username: $DOCKER_REGISTRY_USERNAME"
-      - echo "Attempting to login to Docker registry..."
       - echo "$DOCKER_REGISTRY_PASSWORD" | docker login -u "$DOCKER_REGISTRY_USERNAME" --password-stdin "$DOCKER_REGISTRY_URL"
       - docker build -t "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/swiggy:latest" .
       - docker push "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/swiggy:latest"
@@ -58,7 +55,7 @@ phases:
       - echo "Running SonarQube analysis result"
       - sonar-scanner -Dsonar.projectKey=swiggy -Dsonar.sources=. -Dsonar.host.url=http://34.212.163.213:9000/
       - echo "Sending build status email..."
-      - aws ses send-email --from "soumya14041987@gmail.com" --destination "ToAddresses=soumya14041987@gmail.com" --message "Subject={Data=Build Status,Charset=utf-8},Body={Text={Data=Build completed successfully,Charset=utf-8},Html={Data=Build completed successfully,Charset=utf-8}}" --region "us-west-2"
+      - aws ses send-email --from "soumya14041987@gmail.com" --destination '{"ToAddresses":["soumya14041987@gmail.com"]}' --message '{"Subject": {"Data": "CodeBuild Status: Succeeded"}, "Body": {"Text": {"Data": "CodeBuild project has been built successfully."}}}' --region "us-west-2"
 
 artifacts:
   files:
