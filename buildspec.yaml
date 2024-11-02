@@ -50,7 +50,6 @@ phases:
       - echo "Build completed successfully!"
       - echo "Running SonarQube analysis..."
       - sonar-scanner -Dsonar.projectKey=swiggy -Dsonar.sources=. -Dsonar.host.url=http://34.212.163.213:9000/
- 
 
 artifacts:
   files:
