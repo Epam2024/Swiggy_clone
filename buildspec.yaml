@@ -58,11 +58,7 @@ phases:
       - echo "Running SonarQube analysis result"
       - sonar-scanner -Dsonar.projectKey=swiggy -Dsonar.sources=. -Dsonar.host.url=http://34.212.163.213:9000/
       - echo "Sending email notification..."
-      - >
-        aws ses send-email --from "soumya14041987@gmail.com"
-        --destination '{"ToAddresses":["soumya14041987@gmail.com"]}'
-        --message '{"Subject": {"Data": "CodeBuild Status: Succeeded"}, "Body": {"Text": {"Data": "CodeBuild project has been built successfully."}}}'
-        --region us-west-2
+      - aws ses send-email --from "soumya14041987@gmail.com" --destination '{"ToAddresses":["soumya14041987@gmail.com"]}' --message '{"Subject": {"Data": "CodeBuild Status: Succeeded"}, "Body": {"Text": {"Data": "CodeBuild project has been built successfully."}}}' --region us-west-2
 
 artifacts:
   files:
